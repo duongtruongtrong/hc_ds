@@ -106,7 +106,7 @@ Those highly affected features might be considered in reduce data complexity, ba
 ## Conclusion
 - Input data is quite clean.
 - New features added did not show significant difference comparing to original features.
-- Even though RandomForestClassifier has higher ROC_AUC score, but both models are very overfitted.
+- Even though training ROC_AUC scores are high, but both models are very overfitted.
 - Reducing data complexity might be the best way to reduce overfit.
 - The following features can be considered for feature reduction:
   - NUMERICAL_4
