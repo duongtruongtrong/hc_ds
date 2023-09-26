@@ -3,6 +3,8 @@
 ## Overview
 Data includes loan applications from 2014-06-20 to 2015-05-31.
 Target of prediction: Ability to repay the loan back of the applications (values: 0 and 1).
+
+Number of application is quite stable over time.
 ![image](https://github.com/duongtruongtrong/hc_ds/assets/71629218/ef4fbf1f-454e-4d36-a2f6-8e81fd7bb71c)
 
 ## Data Exploration
@@ -22,6 +24,7 @@ June 2014 data is not completed.
 ![image](https://github.com/duongtruongtrong/hc_ds/assets/71629218/00c11732-ae3b-4103-abcc-bb75c7e6c782)
 
 NUMERICAL_10 has null value in a long period of time. If filling null with any constaent, it might lead to big bias for this period of time in prediction.
+
 ![image](https://github.com/duongtruongtrong/hc_ds/assets/71629218/23654226-192f-4bff-a802-1943bd9a3b1c)
 
 
