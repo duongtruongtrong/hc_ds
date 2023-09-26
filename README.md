@@ -27,11 +27,26 @@ NUMERICAL_10 has null value in a long period of time. If filling null with any c
 
 ![image](https://github.com/duongtruongtrong/hc_ds/assets/71629218/23654226-192f-4bff-a802-1943bd9a3b1c)
 
-
 ### Data Exploration Conclusion
 - Remove NUMERICAL_10 from feature list.
 - NUMERICAL_40 fill null with mean value of the last 30 days (could be another time range, but with limited time for testing).
 - June 2014 is not too importance, can be use for mean and standard deviation aggregation.
+
+## Feature Engineering
+### Filling null
+Numerical features: Fill null with mean value of the last 30 days since application date.
+
+Categorical features: Fill null with "unknown".
+
+### Date Features
+Extract these features from TIME column:
+- Months Columns: month_1, month_2...
+- Dates Columns: date_1, date_2...
+- DOW Columns: dow_0, dow_1...
+- Hour: hour_1, hour_2...
+
+### Standard Deviation Features
+Calculate standard deviation of numerical features using mean of the last 30 days since application date.
 
 ## Machine Learning Model
 
@@ -48,9 +63,56 @@ RandomForestClassifier is a set of binary trees taking their majority vote for c
 Training and prediction speed is quite slow, depending on the complexity of algorithm settings. The more trees or the more depth, the slower the algorithm runs.
 Exchange of its speed, the accuracy rate is noemally higher than LogisticRegression for high complexity data.
 
-• Explanatory analysis of features and their relation to target
-• Brief description of the used algorithms and their pros and cons
-• Performance evaluation of the model on the last month (May 2015), which would
-be used as holdout testing data. Please include AUC-ROC among your evaluation
-metrics
-• Short conclusion and recommendatio
+### Comparison
+|                 | LogisticRegression                       | RandomForestClassifier                    |
+|-----------------|------------------------------------------|-------------------------------------------|
+| Speed           | Fast                                     | Slow                                      |
+| Size on Disk    | Small                                    | Big                                       |
+| Accuracy Rate   | Normally low for high complexity data    | Normally high for high complexity data    |
+| Complexity Data | Normally handle well low complexity data | Normally handle well high complexity data |
+
+## Model Performance
+### ROC_AUC Score
+ROC_AUC score of 2 models are quite high in training.
+![image](https://github.com/duongtruongtrong/hc_ds/assets/71629218/048a0338-68a0-4697-8e4c-42cf0546f9ce)
+
+ROC_AUC score of 2 models are low in test -> 2 models are heavily overfitted.
+![image](https://github.com/duongtruongtrong/hc_ds/assets/71629218/8026c976-3d38-4a2f-994f-13bf20a8403f)
+
+Tunning hyper-parameters of the models will not reduce considerably overfit.
+
+Reducing data complexity might be benificial more.
+
+### Features vs TARGET Relationship
+Since both models have the similar ROC_AUC score, considering feature importance of both models are ok for reducing overfit in the future.
+
+LogisticRegression depends more on numberical than categorical features.
+Highlights:
+- NUMERICAL_4, NUMERICAL_7, NUMERICAL_20_std_dev_last_30_days and NUMERICAL_18_std_dev_last_30_days affect TARGET highly negatively.
+- NUMERICAL_4_std_dev_last_30_days, NUMERICAL_7_std_dev_last_30_days, NUMERICAL_20 and NUMERICAL_18 affect TARGET highly positively.
+- Original numberical features and their standard deviation features affect TARGET oppositely.
+
+![image](https://github.com/duongtruongtrong/hc_ds/assets/71629218/7ac24d90-d5cd-4be6-91e0-19c1ad24ff0e)
+
+RandomForestClassifier depends more on categorical than numberical features.
+Highlights:
+- CATEGORICAL_9, CATEGORICAL_7 and CATEGORICAL_1 highly affect TARGET. Around 60% of the predictions were based on these features.
+- If original numberical features highly affect TARGET, their standard deviation features will affect TARGET as well.
+
+![image](https://github.com/duongtruongtrong/hc_ds/assets/71629218/7b906781-3762-42b9-a658-f7ecc01b1cea)
+
+Those highly affected features might be considered in reduce data complexity, basing on their real meaning, those features can be excluded in training.
+
+## Conclusion
+- Input data is quite clean.
+- New features added did not show significant difference comparing to original features.
+- Even though RandomForestClassifier has higher ROC_AUC score, but both models are very overfitted.
+- Reducing data complexity might be the best way to reduce overfit.
+- The following features can be considered for feature reduction:
+  - NUMERICAL_4
+  - NUMERICAL_7
+  - NUMERICAL_20
+  - NUMERICAL_18
+  - CATEGORICAL_9
+  - CATEGORICAL_7
+  - CATEGORICAL_1
